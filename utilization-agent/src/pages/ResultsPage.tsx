@@ -70,6 +70,7 @@ export function ResultsPage() {
   const [dailySummaryModalOpen, setDailySummaryModalOpen] = useState(false);
   const [dailySummary, setDailySummary] = useState<DailySummary | null>(null);
   const [generatingSummary, setGeneratingSummary] = useState(false);
+  const [selectedModel, setSelectedModel] = useState<'gpt-5-nano' | 'gpt-4.1'>('gpt-5-nano');
 
   useEffect(() => {
     async function fetchData() {
@@ -154,7 +155,8 @@ export function ResultsPage() {
         date,
         providerName,
         weather?.condition,
-        weather?.temperature_f
+        weather?.temperature_f,
+        selectedModel
       );
       setBulkCampaigns(campaigns);
     } catch (error) {
@@ -196,7 +198,8 @@ export function ResultsPage() {
       const analysis = await analyzeGeneralWaitlist(
         waitlistPatients,
         provider.name,
-        provider.specialty
+        provider.specialty,
+        selectedModel
       );
 
       setWaitlistAnalysis(analysis);
@@ -227,7 +230,8 @@ export function ResultsPage() {
         providerId,
         provider?.specialty,
         weather?.condition,
-        weather?.temperature_f
+        weather?.temperature_f,
+        selectedModel
       );
       setDailySummary(summary);
     } catch (error) {
@@ -282,7 +286,8 @@ export function ResultsPage() {
                 chief_complaint: appointment.chief_complaint,
                 status: 'scheduled'
               },
-              patientData.history
+              patientData.history,
+              selectedModel
             );
 
             // 3. Fetch weather for virtual eligibility assessment
@@ -315,7 +320,8 @@ export function ResultsPage() {
                 preferred_virtual: patientData.preferred_virtual,
                 zip_code: patientData.zip_code
               },
-              weatherData
+              weatherData,
+              selectedModel
             );
 
             // 4. Save to database
@@ -344,7 +350,7 @@ export function ResultsPage() {
               virtual_eligible: virtualEligibility.virtual_eligible,
               virtual_reason: virtualEligibility.virtual_reason,
               virtual_confidence: virtualEligibility.confidence,
-              model_version: 'gpt-5-nano'
+              model_version: selectedModel
             });
 
             // Update progress atomically
@@ -495,8 +501,23 @@ export function ResultsPage() {
           </div>
         </div>
 
-        {/* Action Buttons and Progress */}
-        <div className="mb-2 flex items-center justify-end gap-3">
+        {/* Model Selection and Action Buttons */}
+        <div className="mb-2 flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2">
+            <label htmlFor="model-select" className="text-sm font-medium text-gray-700">
+              AI Model:
+            </label>
+            <select
+              id="model-select"
+              value={selectedModel}
+              onChange={(e) => setSelectedModel(e.target.value as 'gpt-5-nano' | 'gpt-4.1')}
+              className="px-3 py-1.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-black"
+            >
+              <option value="gpt-5-nano">gpt-5-nano</option>
+              <option value="gpt-4.1">gpt-4.1</option>
+            </select>
+          </div>
+          <div className="flex items-center gap-3">
           <button
             onClick={handleGenerateRiskScores}
             disabled={generatingRisk}
@@ -556,6 +577,7 @@ export function ResultsPage() {
               'Summary Agent'
             )}
           </button>
+          </div>
         </div>
 
         {generatingRisk && (

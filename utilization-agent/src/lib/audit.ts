@@ -25,12 +25,29 @@ export function generateRequestId(): string {
 
 /**
  * Calculate estimated cost based on OpenAI pricing
- * GPT-4o pricing (as of 2025): $2.50 per 1M input tokens, $10 per 1M output tokens
+ * Pricing per 1M tokens (as of 2025):
+ * - gpt-5-nano: $2.50 input, $10.00 output
+ * - gpt-4.1: $2.50 input, $10.00 output (estimated, adjust as needed)
  */
 export function calculateCost(inputTokens: number, outputTokens: number, model: string): number {
-  // Simplified pricing - adjust based on actual model
-  const INPUT_COST_PER_1M = 2.50;
-  const OUTPUT_COST_PER_1M = 10.00;
+  let INPUT_COST_PER_1M: number;
+  let OUTPUT_COST_PER_1M: number;
+
+  switch (model) {
+    case 'gpt-5-nano':
+      INPUT_COST_PER_1M = 2.50;
+      OUTPUT_COST_PER_1M = 10.00;
+      break;
+    case 'gpt-4.1':
+      // Adjust these values based on actual gpt-4.1 pricing
+      INPUT_COST_PER_1M = 2.50;
+      OUTPUT_COST_PER_1M = 10.00;
+      break;
+    default:
+      // Default pricing for unknown models
+      INPUT_COST_PER_1M = 2.50;
+      OUTPUT_COST_PER_1M = 10.00;
+  }
 
   const inputCost = (inputTokens / 1_000_000) * INPUT_COST_PER_1M;
   const outputCost = (outputTokens / 1_000_000) * OUTPUT_COST_PER_1M;

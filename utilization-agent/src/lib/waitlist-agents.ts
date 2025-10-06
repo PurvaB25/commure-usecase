@@ -109,7 +109,8 @@ const analyzeGeneralWaitlistFunction = {
 export async function analyzeGeneralWaitlist(
   waitlistPatients: WaitlistPatient[],
   providerName: string,
-  providerSpecialty: string
+  providerSpecialty: string,
+  model: 'gpt-5-nano' | 'gpt-4.1' = 'gpt-5-nano'
 ): Promise<GeneralWaitlistAnalysis> {
   const systemPrompt = `You are an expert healthcare operations specialist analyzing a new patient waitlist.
 
@@ -174,8 +175,19 @@ ${JSON.stringify(
 Analyze and prioritize all patients. Provide actionable recommendations for the scheduling team.`;
 
   try {
+    const modelConfig = model === 'gpt-4.1'
+      ? {
+          model: 'gpt-4.1' as const,
+          temperature: 0.1,
+          max_completion_tokens: 8192,
+          top_p: 1,
+          frequency_penalty: 0,
+          presence_penalty: 0,
+        }
+      : { model: 'gpt-5-nano' as const };
+
     const response = await openai.chat.completions.create({
-      model: 'gpt-5-nano',
+      ...modelConfig,
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: userPrompt },

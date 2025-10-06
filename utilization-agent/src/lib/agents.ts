@@ -80,7 +80,8 @@ export async function generateRiskScore(
     no_shows: number;
     no_show_rate: number;
     recent_reschedules: number;
-  }
+  },
+  model: 'gpt-5-nano' | 'gpt-4.1' = 'gpt-5-nano'
 ): Promise<RiskAssessment> {
   const appointmentDate = new Date(appointment.scheduled_time);
   const bookedDate = appointment.booked_at ? new Date(appointment.booked_at) : new Date();
@@ -172,8 +173,19 @@ Generate a risk score (0-100) that includes weather impact and identify top 2-3 
   const startTime = Date.now();
 
   try {
+    const modelConfig = model === 'gpt-4.1'
+      ? {
+          model: 'gpt-4.1' as const,
+          temperature: 0.1,
+          max_completion_tokens: 8192,
+          top_p: 1,
+          frequency_penalty: 0,
+          presence_penalty: 0,
+        }
+      : { model: 'gpt-5-nano' as const };
+
     const response = await openai.chat.completions.create({
-      model: 'gpt-5-nano',
+      ...modelConfig,
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: userPrompt },
@@ -196,11 +208,11 @@ Generate a risk score (0-100) that includes weather impact and identify top 2-3 
       request_id: requestId,
       agent_type: 'risk_scorer',
       latency_ms: latency,
-      model: 'gpt-5-nano',
+      model: model,
       input_tokens: usage.prompt_tokens,
       output_tokens: usage.completion_tokens,
       total_tokens: usage.total_tokens,
-      estimated_cost_usd: calculateCost(usage.prompt_tokens, usage.completion_tokens, 'gpt-5-nano'),
+      estimated_cost_usd: calculateCost(usage.prompt_tokens, usage.completion_tokens, model),
       status: 'success',
       appointment_id: appointment.appointment_id,
       patient_id: patient.patient_id
@@ -219,7 +231,7 @@ Generate a risk score (0-100) that includes weather impact and identify top 2-3 
       request_id: requestId,
       agent_type: 'risk_scorer',
       latency_ms: latency,
-      model: 'gpt-5-nano',
+      model: model,
       input_tokens: 0,
       output_tokens: 0,
       total_tokens: 0,
@@ -272,7 +284,8 @@ export async function assessVirtualEligibility(
     preferred_virtual: number;
     zip_code: string;
   },
-  weather?: Weather | null
+  weather?: Weather | null,
+  model: 'gpt-5-nano' | 'gpt-4.1' = 'gpt-5-nano'
 ): Promise<{ virtual_eligible: boolean; virtual_reason: string; confidence: number }> {
   const systemPrompt = `You are a telehealth eligibility expert. Determine if appointments can be conducted virtually.
 
@@ -354,8 +367,19 @@ Chief Complaint: ${chiefComplaint}${contextDetails}
 
 Assess virtual eligibility for this specific appointment. Your reason MUST start with a clear clinical explanation of why this appointment type and chief complaint are suitable or unsuitable for virtual care, then mention supporting contextual factors. Focus on clinical rationale first.`;
 
+  const modelConfig = model === 'gpt-4.1'
+    ? {
+        model: 'gpt-4.1' as const,
+        temperature: 0.1,
+        max_completion_tokens: 8192,
+        top_p: 1,
+        frequency_penalty: 0,
+        presence_penalty: 0,
+      }
+    : { model: 'gpt-5-nano' as const };
+
   const response = await openai.chat.completions.create({
-    model: 'gpt-5-nano',
+    ...modelConfig,
     messages: [
       { role: 'system', content: systemPrompt },
       { role: 'user', content: userPrompt },
@@ -434,7 +458,8 @@ export async function generateBulkCampaigns(
   date: string,
   providerName: string,
   weatherCondition?: string,
-  weatherTemp?: number
+  weatherTemp?: number,
+  model: 'gpt-5-nano' | 'gpt-4.1' = 'gpt-5-nano'
 ): Promise<BulkCampaignResult> {
   const systemPrompt = `You are a healthcare outreach specialist with expertise in behavioral psychology and patient engagement.
 
@@ -632,8 +657,19 @@ Include SMS, Email, AND EHR Notification for each touchpoint.`;
   const startTime = Date.now();
 
   try {
+    const modelConfig = model === 'gpt-4.1'
+      ? {
+          model: 'gpt-4.1' as const,
+          temperature: 0.1,
+          max_completion_tokens: 8192,
+          top_p: 1,
+          frequency_penalty: 0,
+          presence_penalty: 0,
+        }
+      : { model: 'gpt-5-nano' as const };
+
     const response = await openai.chat.completions.create({
-      model: 'gpt-5-nano',
+      ...modelConfig,
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: userPrompt },
@@ -656,11 +692,11 @@ Include SMS, Email, AND EHR Notification for each touchpoint.`;
       request_id: requestId,
       agent_type: 'outreach_sequencer',
       latency_ms: latency,
-      model: 'gpt-5-nano',
+      model: model,
       input_tokens: usage.prompt_tokens,
       output_tokens: usage.completion_tokens,
       total_tokens: usage.total_tokens,
-      estimated_cost_usd: calculateCost(usage.prompt_tokens, usage.completion_tokens, 'gpt-5-nano'),
+      estimated_cost_usd: calculateCost(usage.prompt_tokens, usage.completion_tokens, model),
       status: 'success'
     });
 
@@ -672,7 +708,7 @@ Include SMS, Email, AND EHR Notification for each touchpoint.`;
       request_id: requestId,
       agent_type: 'outreach_sequencer',
       latency_ms: latency,
-      model: 'gpt-5-nano',
+      model: model,
       input_tokens: 0,
       output_tokens: 0,
       total_tokens: 0,
@@ -736,7 +772,8 @@ export async function generateDailySummary(
   providerId?: string,
   providerSpecialty?: string,
   weatherCondition?: string,
-  weatherTemp?: number
+  weatherTemp?: number,
+  model: 'gpt-5-nano' | 'gpt-4.1' = 'gpt-5-nano'
 ): Promise<DailySummary> {
   // Calculate metrics from appointment data
   const totalAppointments = appointments.length;
@@ -892,8 +929,19 @@ ${patientSummaries.map((p, idx) => `${idx + 1}. ${p.scheduled_time.split('T')[1]
 
 Generate an executive summary, key insights, and actionable recommendations for this day.`;
 
+  const modelConfig = model === 'gpt-4.1'
+    ? {
+        model: 'gpt-4.1' as const,
+        temperature: 0.1,
+        max_completion_tokens: 8192,
+        top_p: 1,
+        frequency_penalty: 0,
+        presence_penalty: 0,
+      }
+    : { model: 'gpt-5-nano' as const };
+
   const response = await openai.chat.completions.create({
-    model: 'gpt-5-nano',
+    ...modelConfig,
     messages: [
       { role: 'system', content: systemPrompt },
       { role: 'user', content: userPrompt }
