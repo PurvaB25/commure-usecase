@@ -777,8 +777,8 @@ export async function generateDailySummary(
 ): Promise<DailySummary> {
   // Calculate metrics from appointment data
   const totalAppointments = appointments.length;
-  const newPatients = appointments.filter(apt => apt.appointment_type === 'New Patient').length;
-  const returningPatients = totalAppointments - newPatients;
+  const newPatients = 0; // No "New Patient" appointment type in seed data
+  const returningPatients = totalAppointments;
 
   const highRiskPatients = appointments.filter(apt => apt.risk_badge === 'High').length;
   const mediumRiskPatients = appointments.filter(apt => apt.risk_badge === 'Medium').length;
@@ -832,7 +832,7 @@ export async function generateDailySummary(
     appointment_type: apt.appointment_type,
     chief_complaint: apt.chief_complaint,
     risk_level: (apt.risk_badge || 'Unknown') as 'Low' | 'Medium' | 'High' | 'Unknown',
-    is_new_patient: apt.appointment_type === 'New Patient',
+    is_new_patient: false, // No "New Patient" appointment type in seed data
     virtual_eligible: apt.virtual_eligible === 1
   }));
 

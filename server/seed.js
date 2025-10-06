@@ -86,7 +86,6 @@ const CHIEF_COMPLAINTS = [
 const APPOINTMENT_TYPES = [
   'Annual Physical',
   'Follow-up',
-  'New Patient',
   'Consultation',
   'Preventive Care',
   'Chronic Disease Management',
