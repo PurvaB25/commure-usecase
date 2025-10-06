@@ -183,7 +183,7 @@ Generate a risk score (0-100) that includes weather impact and identify top 2-3 
     });
 
     const toolCall = response.choices[0].message.tool_calls?.[0];
-    if (!toolCall || toolCall.function.name !== 'generate_risk_assessment') {
+    if (!toolCall || toolCall.type !== 'function' || toolCall.function.name !== 'generate_risk_assessment') {
       throw new Error('Invalid response from LLM');
     }
 
@@ -365,7 +365,7 @@ Assess virtual eligibility for this specific appointment. Your reason MUST start
   });
 
   const toolCall = response.choices[0].message.tool_calls?.[0];
-  if (!toolCall || toolCall.function.name !== 'assess_virtual_eligibility') {
+  if (!toolCall || toolCall.type !== 'function' || toolCall.function.name !== 'assess_virtual_eligibility') {
     throw new Error('Invalid response from LLM');
   }
 
@@ -643,7 +643,7 @@ Include SMS, Email, AND EHR Notification for each touchpoint.`;
     });
 
     const toolCall = response.choices[0].message.tool_calls?.[0];
-    if (!toolCall || toolCall.function.name !== 'generate_bulk_campaigns') {
+    if (!toolCall || toolCall.type !== 'function' || toolCall.function.name !== 'generate_bulk_campaigns') {
       throw new Error('Invalid response from LLM');
     }
 
@@ -903,7 +903,7 @@ Generate an executive summary, key insights, and actionable recommendations for 
   });
 
   const toolCall = response.choices[0].message.tool_calls?.[0];
-  if (!toolCall || toolCall.function.name !== 'generate_daily_summary') {
+  if (!toolCall || toolCall.type !== 'function' || toolCall.function.name !== 'generate_daily_summary') {
     throw new Error('Invalid response from LLM');
   }
 

@@ -193,7 +193,7 @@ Analyze and prioritize all patients. Provide actionable recommendations for the 
     });
 
     const toolCall = response.choices[0].message.tool_calls?.[0];
-    if (!toolCall || toolCall.function.name !== 'analyze_general_waitlist') {
+    if (!toolCall || toolCall.type !== 'function' || toolCall.function.name !== 'analyze_general_waitlist') {
       throw new Error('Invalid response from LLM');
     }
 

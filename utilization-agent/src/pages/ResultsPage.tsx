@@ -376,7 +376,8 @@ export function ResultsPage() {
       console.log('✅ All risk scores generated:', results);
     } catch (error) {
       console.error('Failed to generate risk scores:', error);
-      alert(`Failed to generate risk scores at ${riskProgress.current}/${riskProgress.total}. Error: ${error.message}`);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      alert(`Failed to generate risk scores at ${riskProgress.current}/${riskProgress.total}. Error: ${errorMessage}`);
     } finally {
       setGeneratingRisk(false);
       setRiskProgress({ current: 0, total: 0 });
