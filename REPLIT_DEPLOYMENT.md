@@ -114,7 +114,7 @@ VITE_API_URL=https://[your-repl-url]:3001
 
 ### Port Issues
 - Replit automatically manages ports
-- The frontend runs on port 5173 (mapped to port 80)
+- The frontend runs on port 5000 (mapped to port 80)
 - The backend runs on port 3001
 
 ### Build Issues

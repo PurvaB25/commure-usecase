@@ -40,4 +40,4 @@ frontend.on('exit', (code) => {
 
 console.log('Starting Commure Pulse servers...');
 console.log('Backend: http://localhost:3001');
-console.log('Frontend: http://localhost:5173');
+console.log('Frontend: http://localhost:5000');
