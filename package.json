@@ -1,0 +1,23 @@
+{
+  "name": "commure-pulse",
+  "version": "1.0.0",
+  "description": "Commure Pulse - Healthcare Utilization Management System",
+  "type": "module",
+  "scripts": {
+    "install:all": "npm install && cd server && npm install && cd ../utilization-agent && npm install",
+    "build": "cd utilization-agent && npm run build",
+    "start:server": "cd server && npm start",
+    "start:frontend": "cd utilization-agent && npm run preview",
+    "start": "npm run build && npm run start:both",
+    "start:both": "node start-servers.js",
+    "dev:server": "cd server && npm start",
+    "dev:frontend": "cd utilization-agent && npm run dev",
+    "seed": "cd server && npm run seed"
+  },
+  "keywords": ["healthcare", "utilization", "management"],
+  "author": "",
+  "license": "ISC",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
