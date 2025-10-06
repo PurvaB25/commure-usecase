@@ -70,7 +70,7 @@ export function ResultsPage() {
   const [dailySummaryModalOpen, setDailySummaryModalOpen] = useState(false);
   const [dailySummary, setDailySummary] = useState<DailySummary | null>(null);
   const [generatingSummary, setGeneratingSummary] = useState(false);
-  const [selectedModel, setSelectedModel] = useState<'gpt-5-nano' | 'gpt-4.1'>('gpt-5-nano');
+  const [selectedModel, setSelectedModel] = useState<'gpt-5-nano' | 'gpt-4.1'>('gpt-4.1');
 
   useEffect(() => {
     async function fetchData() {
