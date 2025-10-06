@@ -352,7 +352,7 @@ for (const date of dates) {
 console.log(`✓ Seeded ${appointmentCount} appointments across ${dates.length} days\n`);
 
 // ============================================================================
-// SEED WAITLIST PATIENTS (20 patients)
+// SEED WAITLIST PATIENTS (100 patients)
 // ============================================================================
 
 console.log('📝 Seeding waitlist patients...');
@@ -431,7 +431,7 @@ const waitlistStmt = db.prepare(`
   ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
 `);
 
-for (let i = 1; i <= 50; i++) {
+for (let i = 1; i <= 100; i++) {
   const firstName = randomChoice(FIRST_NAMES);
   const lastName = randomChoice(LAST_NAMES);
   const waitlistId = `WL${String(i).padStart(4, '0')}`;
@@ -456,7 +456,7 @@ for (let i = 1; i <= 50; i++) {
   );
 }
 
-console.log(`✓ Seeded 50 waitlist patients with specialty-matched concerns\n`);
+console.log(`✓ Seeded 100 waitlist patients with specialty-matched concerns\n`);
 
 // ============================================================================
 // SUMMARY
@@ -469,7 +469,7 @@ console.log(`📊 SUMMARY:`);
 console.log(`   • Providers: ${providers.length}`);
 console.log(`   • Patients: ${patients.length}`);
 console.log(`   • Appointments: ${appointmentCount} (across 7 days)`);
-console.log(`   • Waitlist: 50 patients`);
+console.log(`   • Waitlist: 100 patients`);
 console.log(`   • Weather data: ${weatherConditions.length} days × ${ZIP_CODES.length} zip codes`);
 console.log(`   • Patient history: ${patients.length} records`);
 console.log('═══════════════════════════════════════════════════════════\n');
